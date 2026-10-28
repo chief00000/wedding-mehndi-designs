@@ -14,3 +14,216 @@
 @media(max-width:760px){.topbar{height:70px;padding:0 5%}.nav-links{display:none;position:absolute;top:69px;left:0;right:0;background:var(--paper);padding:20px 5%;border-bottom:1px solid var(--line);flex-direction:column;gap:18px}.nav-links.open{display:flex}.top-cta{margin-left:auto;margin-right:18px}.menu-toggle{display:block;order:3}.hero{grid-template-columns:1fr;padding:58px 7% 38px;gap:0}.hero-art{height:350px;transform:scale(.85);margin-top:-5px}.hero-actions{margin-bottom:28px}.section{padding:65px 5%}.section-heading{display:block;margin-bottom:28px}.section-heading>p{margin-top:16px}.category-layout{grid-template-columns:1fr;gap:25px}.category-sidebar{border-right:0;border-bottom:1px solid var(--line);padding:0 0 16px}.category-nav{flex-direction:row;overflow-x:auto;max-height:none;padding-bottom:5px}.category-link{white-space:nowrap;flex-shrink:0;border:1px solid var(--line);padding:9px 11px}.category-link.active{border:1px solid var(--rose)}.sidebar-title{margin-bottom:10px}.design-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.design-art{height:130px}.card-body{padding:12px 10px}.card-body h4{font-size:15px}.card-body p{font-size:10px}.card-actions button{padding:8px 5px}.library-controls{flex-wrap:wrap}.search-box{max-width:none;flex-basis:100%}.select-wrap select,.filter-button{flex:1}.generator-section{grid-template-columns:1fr;padding:65px 5%;gap:30px}.generator-intro{position:static}.generator-intro>p{max-width:500px}.studio-tip{margin-top:20px}.generator-panel{padding:22px 18px}.steps-grid{grid-template-columns:1fr;gap:10px}.step-card{min-height:0;padding:22px}.step-icon{margin-bottom:8px}.footer{flex-wrap:wrap;padding:25px 5%}.footer p{order:3;flex-basis:100%}}
 @media(max-width:430px){.brand-copy strong{font-size:8px;letter-spacing:1.3px}.brand-copy small{font-size:7px;letter-spacing:1.2px}.brand-mark{width:37px;height:37px}.top-cta{font-size:9px;margin-right:10px}.hero h1{font-size:48px}.hero-art{transform:scale(.72);margin:-25px -35px -20px}.hero-actions{gap:15px;flex-wrap:wrap}.button{padding:12px 13px}.design-grid{grid-template-columns:1fr 1fr}.design-art{height:110px}.art-symbol{font-size:42px}.active-category-row h3{font-size:25px}.result-count{font-size:9px}.form-grid{grid-template-columns:1fr;gap:14px}.form-actions{flex-wrap:wrap}.form-actions button{flex:1}.output-heading h3{font-size:20px}.footer-brand{flex-basis:100%}.footer-credit{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Final mobile layout fixes */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.topbar {
+  min-width: 0;
+  gap: 8px;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.top-cta {
+  white-space: nowrap;
+}
+
+.hero,
+.section,
+.generator-section,
+.footer {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.hero > *,
+.category-layout > *,
+.generator-section > * {
+  min-width: 0;
+}
+
+.design-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.design-card,
+.generator-panel {
+  min-width: 0;
+}
+
+.card-actions button {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    height: auto;
+    min-height: 70px;
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    gap: 7px;
+  }
+
+  .brand-copy strong {
+    letter-spacing: 1px;
+  }
+
+  .top-cta {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .menu-toggle {
+    margin-left: 0;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 38px 18px;
+    gap: 10px;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 10vw, 48px);
+    letter-spacing: -1px;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-art {
+    width: 100%;
+    height: 320px;
+    margin: 0;
+    transform: none;
+    overflow: hidden;
+  }
+
+  .orbit-one {
+    width: 85%;
+    height: 290px;
+  }
+
+  .orbit-two {
+    width: 72%;
+    height: 250px;
+  }
+
+  .art-back {
+    width: 175px;
+    height: 245px;
+  }
+
+  .art-front {
+    width: 180px;
+    height: 255px;
+  }
+
+  .art-stamp {
+    right: 3%;
+    top: 4%;
+    width: 52px;
+    height: 52px;
+  }
+
+  .art-caption {
+    right: 2%;
+    bottom: 1%;
+    font-size: 10px;
+  }
+
+  .section,
+  .generator-section {
+    padding: 42px 16px;
+  }
+
+  .section-heading h2,
+  .generator-intro h2 {
+    font-size: clamp(30px, 8vw, 40px);
+    letter-spacing: -1px;
+  }
+
+  .active-category-row {
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .design-grid {
+    gap: 9px;
+  }
+
+  .design-art {
+    height: 115px;
+  }
+
+  .card-body {
+    padding: 10px 8px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .library-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .generator-panel {
+    padding: 16px 12px;
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-actions,
+  .output-actions {
+    flex-wrap: wrap;
+  }
+
+  .output-actions .button {
+    max-width: 100%;
+  }
+
+  .footer {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-copy small {
+    letter-spacing: 0.5px;
+  }
+
+  .top-cta {
+    font-size: 8px;
+  }
+
+  .design-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
