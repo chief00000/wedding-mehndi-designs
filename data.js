@@ -1,4 +1,4 @@
-// Structured catalogue source. Each category yields 150 combinations from curated, category-specific directions.
+// Structured catalogue source. Each category yields 250 combinations from curated, category-specific directions.
 const CATEGORY_SEEDS = [
   {
     "name": "Mehndi Designs",

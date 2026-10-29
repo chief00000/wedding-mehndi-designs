@@ -227,3 +227,67 @@ body {
     flex-direction: column;
   }
 }
+
+/* Free tools, legal pages, and accessible responsive controls */
+:focus-visible{outline:3px solid #b78289;outline-offset:3px}
+[hidden]{display:none!important}
+.tool-directory{display:grid;gap:34px}
+.tool-group{border-top:1px solid var(--line);padding-top:20px}
+.tool-group-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.tool-group-heading h3{font:500 25px var(--serif);margin:0}
+.tool-group-heading>span{font-size:9px;letter-spacing:1.4px;color:var(--muted)}
+.tool-name-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.tool-name-link{min-height:54px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--paper);border:1px solid var(--line);font-size:12px;line-height:1.4;transition:background .18s,border-color .18s,transform .18s}
+.tool-name-link span:last-child{color:var(--gold);flex-shrink:0}
+.tool-name-link:hover,.tool-name-link:focus-visible{background:var(--blush);border-color:var(--rose);transform:translateY(-1px)}
+.tool-workspace,.legal-workspace{min-height:55vh;background:linear-gradient(140deg,#fbf8f3,#f5e9e4)}
+.tool-workspace{padding-top:45px;padding-bottom:70px}
+.back-tools{display:inline-block;margin-bottom:24px;color:var(--plum);font-weight:700;font-size:12px;border-bottom:1px solid var(--gold);padding-bottom:5px}
+.tool-title-row{max-width:900px;margin-bottom:25px}
+.tool-title-row h2,.legal-workspace h2{font:500 clamp(34px,4vw,48px)/1.15 var(--serif);margin:12px 0}
+.tool-title-row p{color:var(--muted);font-size:13px}
+.tool-panel{max-width:900px;background:var(--paper);border:1px solid var(--line);padding:clamp(18px,4vw,32px);box-shadow:var(--shadow)}
+.tool-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-bottom:20px}
+.tool-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.tool-field>span{font-size:11px;font-weight:700;color:#4c3d45}
+.tool-field input,.tool-field select,.tool-field textarea,.tool-output-text{width:100%;min-width:0;border:1px solid #e6dcd7;background:#fffefa;padding:11px 12px;color:#55464e;font:12px var(--sans);border-radius:0}
+.tool-field input:focus,.tool-field select:focus,.tool-field textarea:focus,.tool-output-text:focus{outline:2px solid #c98e9155;border-color:var(--rose)}
+.tool-field input[type=range]{padding:0;accent-color:var(--plum)}
+.tool-field input[type=file]{padding:10px}
+.tool-field textarea,.tool-output-text{resize:vertical;line-height:1.65}
+.tool-field small,.tool-hint{font-size:11px;color:var(--muted);line-height:1.7}
+.tool-field-wide{margin:15px 0}
+.tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.tool-check{display:flex;align-items:center;gap:9px;font-size:12px}
+.tool-privacy-note{font-size:11px;color:var(--muted);margin-top:18px}
+.tool-privacy-note a{color:var(--plum);text-decoration:underline}
+.image-preview-wrap{margin-top:20px}
+#toolCanvas{display:block;width:100%;max-height:700px;object-fit:contain;background:#f3e8e4;border:1px solid var(--line)}
+#imageStatus{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.palette-output{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}
+.palette-swatch{border:1px solid var(--line);background:white;padding:8px;min-width:0}
+.palette-swatch>span{display:block;height:54px;margin-bottom:8px}
+.palette-swatch code{font-size:11px}
+.palette-swatch button{float:right;border:0;background:transparent;color:var(--plum);font-size:10px;text-decoration:underline}
+.pattern-preview{margin:16px 0;max-width:480px;background:white;border:1px solid var(--line)}
+.pattern-preview svg{display:block;width:100%;height:auto}
+.utility-result{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7eee9;border-left:3px solid var(--rose);padding:16px;margin-top:18px;font-size:13px;line-height:1.8}
+.checklist{display:grid;gap:0;border-top:1px solid var(--line);margin-top:20px}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:13px 5px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer}
+.check-item input{margin-top:3px;accent-color:var(--plum);width:17px;height:17px;flex-shrink:0}
+.check-item:has(input:checked) span{text-decoration:line-through;color:var(--muted)}
+.legal-workspace{padding-top:45px;padding-bottom:80px}
+.legal-copy{max-width:820px;background:var(--paper);border:1px solid var(--line);padding:clamp(20px,5vw,42px);font-size:14px;line-height:1.9;color:#62535b}
+.legal-copy p{white-space:pre-line}
+.legal-copy a{color:var(--plum);text-decoration:underline}
+.legal-updated{border-top:1px solid var(--line);padding-top:16px;margin-top:25px;font-size:11px;color:var(--muted)}
+.footer{flex-wrap:wrap}
+.footer-links{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:10px;color:#68555f}
+.footer-links a:hover{text-decoration:underline;color:var(--plum)}
+button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:1000px){.tool-name-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-group-heading h3{font-size:22px}}
+@media(max-width:700px){.tool-name-grid{grid-template-columns:1fr}.tool-form-grid{grid-template-columns:1fr}.tool-group-heading{align-items:flex-start;gap:12px}.tool-group-heading h3{font-size:21px}.tool-actions .button{flex:1 1 auto}.palette-output{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-panel{padding:18px}.footer-links{width:100%}}
+@media(max-width:380px){.tool-workspace,.legal-workspace{padding-left:5%;padding-right:5%}.tool-name-link{font-size:11px;padding:12px}.tool-actions{flex-direction:column}.tool-actions .button{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.tool-style-mixer{border:1px solid var(--line);padding:13px;display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 18px}.tool-style-mixer legend{font-size:11px;font-weight:700;padding:0 5px}.tool-style-mixer label{display:flex;align-items:center;gap:5px;font-size:11px}.tool-style-mixer input{accent-color:var(--plum)}

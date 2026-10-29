@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script data-cfasync="false" src="https://abscloud.org/1/e6449d3d36dc4f252335dc4eb88f76e7"></script>
 </head>
 <body>
   <header class="topbar">
@@ -20,9 +19,9 @@
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#library">Design Library</a><a href="#generator">Prompt Studio</a><a href="#how">How it works</a>
+      <a href="#library">Design Library</a><a href="#generator">Prompt Studio</a><a href="#tools">Free Tools</a><a href="#how">How it works</a>
     </nav>
-    <a class="top-cta" href="#generator">Create a prompt <span>↗</span></a>
+    <a class="top-cta" href="#tools">Explore free tools <span>↗</span></a>
   </header>
 
   <main>
@@ -94,7 +93,17 @@
       </div>
     </section>
 
-    <section class="section how-section" id="how">
+
+    <section class="section free-tools-section" id="tools">
+      <div class="section-heading">
+        <div><div class="eyebrow">THE ATELIER TOOLKIT</div><h2>Useful little tools, <em>beautifully simple.</em></h2></div>
+        <p>Thirty free browser-based tools for mehndi inspiration, image-making, and wedding planning. Your images are processed on this device.</p>
+      </div>
+      <div id="toolDirectory" class="tool-directory"></div>
+    </section>
+    <section id="toolWorkspace" class="tool-workspace section" hidden aria-live="polite"></section>
+    <section id="legalWorkspace" class="legal-workspace section" hidden></section>
+\n    <section class="section how-section" id="how">
       <div class="section-heading"><div><div class="eyebrow">A SIMPLE CREATIVE PROCESS</div><h2>From inspiration to <em>intention.</em></h2></div><p>No design software needed. Start with a concept, shape your direction, and take the prompt with you.</p></div>
       <div class="steps-grid"><article class="step-card"><span class="step-number">01</span><div class="step-icon">⌕</div><h3>Explore</h3><p>Browse the library by category, search for motifs, and open any concept for its full prompt.</p></article><article class="step-card"><span class="step-number">02</span><div class="step-icon">✳</div><h3>Personalise</h3><p>Use the Prompt Studio to choose a palette, style, composition, and the details that make your idea yours.</p></article><article class="step-card"><span class="step-number">03</span><div class="step-icon">↗</div><h3>Copy & create</h3><p>Copy the complete English prompt and use it with a compatible image-generation tool.</p></article></div>
     </section>
@@ -109,7 +118,7 @@
   };
 </script>
 <script src="https://bauval.org/22/7c0b696ae6e5932213b1579399e9290f"></script>
-  <footer class="footer"><a class="brand footer-brand" href="#"><span class="brand-mark">W<span>✳</span>M</span><span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span></a><p>Made for meaningful details and beautiful beginnings.</p><div class="footer-credit">Created by <strong>Chief</strong> <span>✳</span></div></footer>
+  <footer class="footer" id="siteFooter"><a class="brand footer-brand" href="#"><span class="brand-mark">W<span>✳</span>M</span><span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span></a><p>Made for meaningful details and beautiful beginnings.</p><nav class="footer-links" aria-label="Legal and information"><a href="#legal/about-us">About</a><a href="#legal/contact-us">Contact</a><a href="#legal/privacy-policy">Privacy</a><a href="#legal/terms-conditions">Terms</a><a href="#legal/disclaimer">Disclaimer</a><a href="#legal/acceptable-use">Acceptable use</a><a href="#legal/storage-notice">Storage notice</a></nav><div class="footer-credit">Created by <strong>Chief</strong> <span>✳</span></div></footer>
 
   <dialog id="designDialog" class="design-dialog"><button class="dialog-close" id="closeDialog" aria-label="Close design details">×</button><div id="dialogContent"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
