@@ -1,0 +1,11 @@
+{
+  "name": "The Wedding Atelier",
+  "short_name": "Wedding Atelier",
+  "description": "Wedding and mehndi creative inspiration, Prompt Studio and browser-based tools.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbf8f3",
+  "theme_color": "#241b22",
+  "icons": [{"src":"og-cover.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

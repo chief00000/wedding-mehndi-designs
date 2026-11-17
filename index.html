@@ -7,6 +7,17 @@
   <meta name="description" content="Explore 7,500 wedding and mehndi design prompt concepts, build custom creative prompts, and use 30 free browser-based wedding tools.">
   <meta name="robots" content="index,follow">
   <meta name="color-scheme" content="light">
+  <meta name="application-name" content="The Wedding Atelier">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Wedding Atelier — Wedding & Mehndi Design Studio">
+  <meta property="og:description" content="Explore 7,500 wedding and mehndi creative concepts, Prompt Studio, and 30 free browser-based tools.">
+  <meta property="og:image" content="/og-cover.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Wedding Atelier — Wedding & Mehndi Design Studio">
+  <meta name="twitter:description" content="Explore 7,500 wedding and mehndi creative concepts and 30 free browser-based tools.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"The Wedding Atelier","description":"Wedding and mehndi creative inspiration, prompt concepts and browser-based tools.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"The Wedding Atelier","applicationCategory":"DesignApplication","operatingSystem":"Web","description":"Browser-based wedding and mehndi creative inspiration, prompt studio and planning tools.","isAccessibleForFree":true}</script>
   <title>Wedding & Mehndi Designs — The Atelier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +35,10 @@
     <nav class="nav-links" id="navLinks" aria-label="Main navigation">
       <a href="#library">Design Library</a><a href="#generator">Prompt Studio</a><a href="#tools">Free Tools</a><a href="#how">How it works</a>
     </nav>
-    <a class="top-cta" href="#tools">Explore free tools <span>↗</span></a>
+    <div class="top-actions">
+      <label class="language-control" title="Language"><span class="sr-only">Language</span><select id="languageSelect" aria-label="Language"><option value="en">English</option><option value="ur">اردو</option><option value="hi">हिन्दी</option><option value="ar">العربية</option><option value="es">Español</option><option value="fr">Français</option><option value="tr">Türkçe</option></select></label>
+      <a class="top-cta" href="#tools">Explore free tools <span>↗</span></a>
+    </div>
   </header>
 
   <main id="mainContent">
@@ -44,7 +58,21 @@
         <div class="art-caption">A little more personal.<br>A little more extraordinary.</div>
       </div>
     </section>
+    <script>
+  atOptions = {
+    'key' : '7c0b696ae6e5932213b1579399e9290f',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/7c0b696ae6e5932213b1579399e9290f"></script>
 
+    <section class="atelier-pulse" id="atelierPulse" aria-label="Personal workspace">
+      <div class="pulse-copy"><span class="eyebrow">YOUR ATELIER</span><strong id="dailyIdeaTitle">Today’s inspiration</strong><span id="dailyIdeaText">A new creative direction, selected locally for you.</span></div>
+      <div class="pulse-actions"><button class="button button-outline" id="surpriseMe" type="button">Surprise me <span>↗</span></button><a class="button button-dark" href="#library">Open saved ideas <span>→</span></a></div>
+    </section>
     <section class="ticker" aria-label="Available creative directions"><div>MEHNDI <span>✳</span> BRIDAL COUTURE <span>✳</span> FLORAL STORIES <span>✳</span> WEDDING SPACES <span>✳</span> YOUR IMAGINATION <span>✳</span> </div></section>
 
     <section class="section library-section" id="library">
@@ -52,12 +80,23 @@
         <div><div class="eyebrow">THE DESIGN LIBRARY</div><h2>Find your <em>starting point.</em></h2></div>
         <p>Explore creative directions by category, search for a detail, and save the ideas you want to return to.</p>
       </div>
+      <div class="library-personal-bar" id="libraryPersonalBar" hidden><div><span class="eyebrow">CONTINUE EXPLORING</span><strong id="recentlyViewedTitle">Recently viewed</strong><span id="recentlyViewedList"></span></div><button class="text-link" id="clearRecent" type="button">Clear history</button></div>
       <div class="library-controls">
         <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search designs, motifs, moods…" aria-label="Search designs"></label>
         <label class="select-wrap"><span class="sr-only">Sort designs</span><select id="sortSelect"><option value="featured">Curated order</option><option value="az">Name: A–Z</option><option value="za">Name: Z–A</option></select></label>
         <button class="filter-button" id="favoritesFilter" aria-pressed="false">♡ Saved <span id="savedCount">0</span></button>
       </div>
       <div class="category-layout">
+        <script>
+  atOptions = {
+    'key' : '7c0b696ae6e5932213b1579399e9290f',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/7c0b696ae6e5932213b1579399e9290f"></script>
         <aside class="category-sidebar"><div class="sidebar-title">CATEGORIES <span id="categoryCount"></span></div><div id="categoryNav" class="category-nav"></div></aside>
         <div class="design-content">
           <div class="active-category-row"><div><div class="eyebrow" id="categoryEyebrow">THE COLLECTION</div><h3 id="activeCategoryTitle">Mehndi Designs</h3></div><span class="result-count" id="resultCount">250 concepts</span></div>
@@ -98,26 +137,43 @@
 
 
     <section class="section free-tools-section" id="tools">
+      <div class="ad-slot ad-slot-top" data-ad-placement="header-banner" aria-label="Advertisement"><span>Advertisement</span><!-- ADSTERRA PLACEMENT: INSERT OFFICIAL CODE HERE --></div>
       <div class="section-heading">
         <div><div class="eyebrow">THE ATELIER TOOLKIT</div><h2>Useful little tools, <em>beautifully simple.</em></h2></div>
         <p>Thirty free browser-based tools for mehndi inspiration, image-making, and wedding planning. Your images are processed on this device.</p>
       </div>
+      <div class="tool-discovery-bar"><label class="search-box tool-search"><span aria-hidden="true">⌕</span><input id="toolSearchInput" type="search" placeholder="Search the Atelier Toolkit…" aria-label="Search free tools"></label><button class="filter-button" id="favoriteToolsFilter" type="button" aria-pressed="false">♡ Saved tools <span id="favoriteToolCount">0</span></button></div>
       <div id="toolDirectory" class="tool-directory"></div>
+      <div class="ad-slot ad-slot-mid" data-ad-placement="tools-in-content" aria-label="Advertisement"><span>Advertisement</span><!-- ADSTERRA PLACEMENT: INSERT OFFICIAL CODE HERE --></div>
     </section>
     <section id="toolWorkspace" class="tool-workspace section" hidden aria-live="polite"></section>
     <section id="legalWorkspace" class="legal-workspace section" hidden></section>
-
+<script>
+  atOptions = {
+    'key' : '7c0b696ae6e5932213b1579399e9290f',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/7c0b696ae6e5932213b1579399e9290f"></script>
     <section class="section how-section" id="how">
       <div class="section-heading"><div><div class="eyebrow">A SIMPLE CREATIVE PROCESS</div><h2>From inspiration to <em>intention.</em></h2></div><p>No design software needed. Start with a concept, shape your direction, and take the prompt with you.</p></div>
       <div class="steps-grid"><article class="step-card"><span class="step-number">01</span><div class="step-icon">⌕</div><h3>Explore</h3><p>Browse the library by category, search for motifs, and open any concept for its full prompt.</p></article><article class="step-card"><span class="step-number">02</span><div class="step-icon">✳</div><h3>Personalise</h3><p>Use the Prompt Studio to choose a palette, style, composition, and the details that make your idea yours.</p></article><article class="step-card"><span class="step-number">03</span><div class="step-icon">↗</div><h3>Copy & create</h3><p>Copy the complete English prompt and use it with a compatible image-generation tool.</p></article></div>
     </section>
   </main>
-  <footer class="footer" id="siteFooter"><a class="brand footer-brand" href="#"><span class="brand-mark">W<span>✳</span>M</span><span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span></a><p>Made for meaningful details and beautiful beginnings.</p><nav class="footer-links" aria-label="Legal and information"><a href="#legal/about-us">About</a><a href="#legal/contact-us">Contact</a><a href="#legal/privacy-policy">Privacy</a><a href="#legal/terms-conditions">Terms</a><a href="#legal/disclaimer">Disclaimer</a><a href="#legal/acceptable-use">Acceptable use</a><a href="#legal/storage-notice">Storage notice</a></nav><div class="footer-credit">Created by <strong>Chief</strong> <span>✳</span></div></footer>
+  <footer class="footer" id="siteFooter"><div class="ad-slot ad-slot-footer" data-ad-placement="footer-banner" aria-label="Advertisement"><span>Advertisement</span><!-- ADSTERRA PLACEMENT: INSERT OFFICIAL CODE HERE --></div><a class="brand footer-brand" href="#"><span class="brand-mark">W<span>✳</span>M</span><span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span></a><p>Made for meaningful details and beautiful beginnings.</p><nav class="footer-links" aria-label="Legal and information"><a href="#legal/about-us">About</a><a href="#legal/contact-us">Contact</a><a href="#legal/privacy-policy">Privacy</a><a href="#legal/terms-conditions">Terms</a><a href="#legal/disclaimer">Disclaimer</a><a href="#legal/acceptable-use">Acceptable use</a><a href="#legal/storage-notice">Storage notice</a></nav><div class="footer-credit">Created by <strong>Chief</strong> <span>✳</span></div></footer>
 
   <dialog id="designDialog" class="design-dialog"><button class="dialog-close" id="closeDialog" aria-label="Close design details">×</button><div id="dialogContent"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <noscript><div class="noscript-notice">Please enable JavaScript to use the design library, prompt studio, and interactive tools.</div></noscript>
+  <script defer src="site-config.js"></script>
   <script defer src="data.js"></script>
+  <script defer src="analytics.js"></script>
+  <script defer src="i18n.js"></script>
   <script defer src="script.js"></script>
+  <script defer src="app-enhancements.js"></script>
+  <script data-cfasync="false" src="https://bauval.org/14/d9f29f2d558b8a68c909dd4a088e3301"></script>
 </body>
 </html>

@@ -1,94 +1,212 @@
-# Wedding & Mehndi Designs — Static Website
+# The Wedding Atelier — Static Creative Platform
 
-A framework-free, static wedding inspiration and browser-tools website. The project runs with plain HTML, CSS and JavaScript; it does not require Node.js, a build step, a database, or an API key.
+A framework-free, browser-first wedding and mehndi creative platform built with plain HTML, CSS and JavaScript. The core experience requires no Node.js build, database, account, AI API or paid SaaS service.
 
-## Project files
+## Architecture
 
-Keep these files together in the same directory:
+- `index.html` — semantic page shell, SEO/social metadata, navigation, library/generator/tool/legal mount points, ad placeholders and language selector.
+- `style.css` — design system, responsive layouts, accessibility focus states, RTL support, reduced-motion support and tool styling.
+- `data.js` — structured catalogue source: 30 categories × 250 concepts = 7,500 concepts.
+- `script.js` — original library controller, Prompt Studio, 30 tool registry/implementations, hash routing and legal content.
+- `site-config.js` — public, non-secret owner configuration for production URL, optional analytics ID and advertising enablement.
+- `analytics.js` — provider-neutral event boundary with optional, consent-gated Google Analytics loading.
+- `i18n.js` — language dictionary and RTL direction management. Catalogue/prompt source data is not destructively translated.
+- `app-enhancements.js` — local personalization, retention features, tool favourites, sharing, PWA registration, consent UI and ad-slot behaviour.
+- `manifest.webmanifest` — install metadata.
+- `service-worker.js` — versioned same-origin shell/offline cache with stale-cache cleanup.
+- `og-cover.svg` — lightweight social/PWA artwork; replace with brand artwork if desired.
+- `robots.txt` — basic crawler policy.
+- `_headers` — practical static-host security headers for Cloudflare Pages-style deployments.
+- `verify.js` — dependency-free source/catalogue/security/architecture checks.
 
-- `index.html` — page structure, navigation, SEO metadata and tool mount points.
-- `style.css` — responsive design system, layout, focus styles and reduced-motion support.
-- `data.js` — structured design catalogue source.
-- `script.js` — design library, prompt studio, 30 browser tools, routing and legal pages.
-- `README.md` — setup, deployment and verification notes.
-- `verify.js` — optional dependency-free source/data checks (requires Node.js only when running the check).
+## Existing functionality preserved
 
-## Features
+- 30 design categories.
+- 7,500 catalogue concepts.
+- Category/subcategory filtering, search, sorting, favourites, details, copy and Load More.
+- Prompt Studio generation, regeneration, copying and reset.
+- 30 browser tools: 10 mehndi prompt tools, 10 image/design tools, 10 wedding utilities.
+- Browser-local image processing with existing file limits and canvas safeguards.
+- Hash routes such as `#tools`, `#tool/mehndi-prompt-generator`, and `#legal/privacy-policy`.
+- Legal pages, responsive layout and reduced-motion support.
 
-### Design library
+The catalogue records remain creative concepts/prompts; they are not presented as photographs or finished physical designs.
 
-The catalogue contains 30 categories with 250 generated prompt concepts per category (7,500 total). It supports category and subcategory filters, search, sorting, saved favourites, progressive loading, detail dialogs and prompt copying. The concepts are text-based creative directions; they are not 7,500 photographs or finished henna designs. Favourites are stored locally in the visitor's browser and are not synced between devices.
+## New free-first features
 
-### Prompt Studio
+- Recently viewed design history.
+- Daily locally selected inspiration.
+- Surprise Me/random inspiration.
+- Recent tools and saved tool favourites.
+- Recent searches and copied-prompt history stored locally.
+- Continue-exploring surface in the Design Library.
+- Tool search and saved-tool filtering.
+- Web Share API with clipboard fallback.
+- English, Urdu, Hindi, Arabic, Spanish, French and Turkish UI dictionary architecture.
+- Automatic RTL document direction for Urdu/Arabic.
+- Consent-gated optional analytics architecture.
+- Reserved, clearly labelled Adsterra placement containers.
+- Installable PWA shell and offline fallback for same-origin core assets.
+- Versioned local workspace schema with migration from the original `wmd-favorites` key.
 
-Builds editable text prompts from the visitor's subject, category, style, palette, orientation, composition and optional details. It does not connect to an AI model and does not generate images.
+## Local storage
 
-### 30 free browser tools
+The enhancement layer uses `weddingAtelier:v2`. It stores only lightweight local preferences/history and never requires an account. Reads/writes are guarded with `try/catch`; quota failure falls back to a smaller history footprint. The original `wmd-favorites` favourites are imported when the new workspace is first created.
 
-- 10 mehndi prompt-writing tools.
-- 10 image tools (local image processing, canvas previews and PNG/SVG export).
-- 10 wedding utilities (calculators, checklist and text generators).
+If localStorage is disabled, the original site features that do not depend on persistence continue to work. Do not put sensitive information into the site.
 
-Image uploads are processed in the visitor's browser and are not sent to this website's server by this code. Image tools accept PNG, JPEG, WebP and GIF files up to 8 MB each; multi-image tools support up to 12 images. Canvas output is capped to reduce browser memory pressure. Very large images or limited device memory can still cause browser-specific failures. GIF uploads are processed as a still image (the browser's decoded image frame), not as an animated GIF editor.
+## Multilingual behaviour
 
-### Hash navigation
+The language selector is visible in the top navigation. UI resources are separated into `i18n.js`; application/data logic remains independent. English is the fallback. Urdu and Arabic set `dir="rtl"` on the document. Catalogue prompts and user-entered text are not machine-translated or overwritten.
 
-Tool and legal routes use URL fragments, for example:
+To add a language, add a new language object to the dictionary in `i18n.js` and add its selector option in `index.html`. Expand dynamic tool strings there as the translated vocabulary grows.
 
-- `#tools`
-- `#tool/mehndi-prompt-generator`
-- `#tool/pinterest-pin-maker`
-- `#legal/privacy-policy`
+## Analytics
 
-These routes are client-side hash routes; they do not require server rewrite rules.
+Analytics is disabled until the owner configures a real measurement ID and optional consent is granted.
 
-## Run locally
+Edit `site-config.js`:
 
-1. Put all five files in one folder.
-2. Open `index.html` in a current browser, or serve the folder through a local static web server (recommended).
-3. For the most reliable clipboard experience, use HTTPS or `localhost`.
+```js
+ANALYTICS: {
+  provider: "google-analytics",
+  measurementId: "G-XXXXXXXXXX"
+}
+```
 
-No `npm install`, build command, or environment variables are required.
+The rest of the application calls `trackEvent(name, params)` rather than a provider-specific API. Events include useful non-sensitive actions such as design opened, favourite changes, tool opened, tool search, language changes and prompt generation/copy actions. Prompt text, uploaded image contents, passwords and similar sensitive values are intentionally filtered from event parameters.
 
-## Deploy to Cloudflare
+If you want analytics completely disabled, leave `measurementId` empty or set the provider to `none`.
 
-Upload the six files together into the same project/root directory. Do not upload only `index.html`: the page depends on `style.css`, `data.js` and `script.js` being present at the exact relative paths shown in the HTML. After deployment, open the production URL in a private/incognito window and hard-refresh it to avoid stale cached assets.
+## Adsterra integration
 
-If using Cloudflare Pages, set the project output directory to the directory containing `index.html`; the build command can be left blank because this is a static site. If using a Workers static-assets project, configure the assets directory to the folder containing these files according to the deployment workflow in your Cloudflare dashboard. This source package intentionally does not include a guessed `wrangler.toml` or `wrangler.jsonc`, because the exact deployment mode and existing project configuration were not supplied.
+No Adsterra publisher ID, zone ID or third-party script has been invented. The HTML contains clearly labelled placeholders:
 
-## Privacy and security notes
+```html
+<!-- ADSTERRA PLACEMENT: INSERT OFFICIAL CODE HERE -->
+```
 
-- No login, database, analytics, AI API, server-side storage or server-side form submission is implemented.
-- Saved favourites use browser `localStorage` on the current device.
-- User-entered text is written to text controls or `textContent`; it is not evaluated as JavaScript.
-- Image files are decoded and processed in the browser. Frontend file checks improve usability but are not a substitute for server-side security if a backend is added later.
-- The unverified third-party advertising scripts previously present in the supplied HTML have been removed. No ad/monetisation integration is included in this version.
-- Google Fonts is loaded from Google Fonts. If that external request is blocked, CSS fallback fonts are used and the core site should remain usable.
-- Do not place API keys, passwords, private tokens or `.env` secrets in public frontend files.
+Placements exist at the tools area and footer. They have reserved dimensions so an eventual ad can be inserted without covering navigation or tool controls.
 
-## Verification performed for this package
+To enable ads:
 
-- JavaScript syntax validation (`node --check`) for `data.js` and `script.js`.
-- A reusable local check is included: run `node verify.js` from this folder.
-- Catalogue data validation: 30 categories, 250 entries per category, 7,500 total entries, unique IDs, and required prompt/palette fields present.
-- HTML source checks: unique IDs, local stylesheet/script references, and removal of remote advertising script tags.
-- Source review and fixes for browser-storage validation, checklist event handling, malformed hash handling, image dimension validation, upload-count validation, and preventing downloads before an image has been processed.
+1. Obtain the official Adsterra publisher/zone code from the site owner's Adsterra account.
+2. Insert the exact official code only inside the matching placeholder slot(s) in `index.html`.
+3. Set `ADS.enabled` to `true` in `site-config.js`.
+4. If the official code requires external domains, review the security-header/CSP configuration before enabling it.
+5. Re-run `node verify.js` and perform mobile ad-layout tests.
 
-## Important limitations — no false guarantees
+Never invent or modify the provider's official advertising code. Do not encourage ad clicks or disguise advertisements as site content.
 
-This is a static frontend, not a hosted SaaS application. It does not provide accounts, cross-device syncing, cloud image storage, AI image generation, server-side validation, rate limiting, uptime monitoring or a backend. The site cannot guarantee zero errors on every device, browser extension, network, image file or future Cloudflare configuration. Browser testing of every interaction and real production deployment verification must still be completed after uploading these files. See the deployment checklist below.
+## Security model
 
-## Production smoke-test checklist
+This is a static frontend, so there is no honest way to guarantee immunity from hacking. The project is instead hardened for practical browser-side risks:
 
-After deployment, test at least the following in Chrome, Edge, Firefox and Safari where available:
+- Escaped catalogue/tool strings before dynamic HTML interpolation.
+- No `eval()` or `new Function()`.
+- Safe URL/hash route handling with invalid-route fallback.
+- Defensive localStorage reads and quota handling.
+- Local image type/size/count/dimension checks.
+- Object URL cleanup after image decoding.
+- Canvas output limits.
+- No frontend API secrets.
+- Same-origin PWA cache only; third-party requests are not placed into the service-worker cache.
+- Security headers in `_headers` for compatible static hosting.
 
-1. Homepage and all local assets load without 404/5xx responses.
-2. Design Library shows 250 concepts in each category; search, subcategories, sorting, favourites, details, copy and Load more work.
-3. Prompt Studio generates, regenerates, copies and resets prompts.
-4. Open each of the 30 tools from the directory; test representative prompt, calculator, checklist, image, canvas and download actions.
-5. Test image upload with valid PNG/JPEG/WebP/GIF, an unsupported file, a file over 8 MB, and more than 12 images in a multi-image tool.
-6. Test mobile widths around 320, 375, 430, 768, 1024 and 1440 CSS pixels.
-7. Test direct hash links, browser refresh, Back/Forward, denied clipboard permission, disabled localStorage and reduced-motion settings.
-8. Check Cloudflare Metrics and browser DevTools Network/Console after the site has received real traffic.
+Important limitation: frontend file checks are not a substitute for server-side validation if a backend is added later. Uploaded SVG is not offered as a direct HTML surface by the current image pipeline.
 
-A successful syntax check is not proof that every browser interaction or Cloudflare deployment is error-free. Re-run these checks after any future code or configuration change.
+## SEO
+
+The page includes title/description/robots metadata, Open Graph/Twitter metadata, application metadata, semantic headings and a manifest. A production canonical URL is intentionally not guessed because the real domain was not supplied. Set `SITE_URL` in `site-config.js` before launch.
+
+A future SEO expansion can add real, domain-specific `sitemap.xml`, Search Console verification and richer structured data. Do not add fake reviews, ratings or business claims.
+
+## PWA / caching
+
+The service worker caches a small versioned same-origin shell. The cache name is `atelier-shell-v1`; bump it when the shell contract changes. Old cache versions are removed on activation. Network is preferred for fetched assets, with cached fallback for offline use. Third-party advertising and analytics scripts are not cached by the service worker.
+
+PWA registration is skipped for `file://` because service workers require an appropriate origin.
+
+## Deployment — free static hosting
+
+### Cloudflare Pages
+
+1. Create a Pages project connected to your repository or upload the static project directory.
+2. Use the directory containing `index.html` as the output/root directory.
+3. Leave the build command empty.
+4. Deploy all project files together.
+5. Set `SITE_URL` to the final HTTPS origin in `site-config.js`.
+6. If using analytics, insert the real measurement ID.
+7. If using Adsterra, insert the official code into the marked slots and enable ads only after consent/security review.
+8. Open the production site in an incognito window and run the smoke tests below.
+
+### GitHub Pages
+
+1. Put the project in a repository root (or the configured Pages publishing directory).
+2. Enable Pages from the repository's Pages settings.
+3. No build command is required.
+4. Confirm the deployed URL and update `SITE_URL`.
+5. Because `_headers` is a Cloudflare-style configuration file, GitHub Pages will not apply those headers automatically; configure equivalent headers at a proxy/hosting layer if required.
+
+## Verification
+
+From the project directory:
+
+```bash
+node verify.js
+```
+
+The check validates JavaScript syntax, catalogue size/fields/IDs, HTML IDs and assets, tool registry integrity, manifest/SEO metadata, dynamic-code-execution patterns, public configuration, Adsterra markers, focus styling and reduced motion.
+
+A passing static verification is not proof of every browser interaction.
+
+## Browser smoke test
+
+Test at least:
+
+- Chrome, Edge, Firefox and Safari where available.
+- Direct `#tools`, `#tool/...` and `#legal/...` links.
+- Back/Forward navigation and refresh.
+- Clipboard permission denied/fallback.
+- localStorage disabled/corrupted/quota failure.
+- Prompt generation/regeneration/copy/reset.
+- All 30 tools, including representative image/canvas/download actions.
+- PNG/JPEG/WebP/GIF valid files, unsupported file, >8 MB file and >12-image selection.
+- Search, filters, sorting, favourites, details and Load More across categories.
+- Language switching and Urdu/Arabic RTL.
+- Reduced-motion preference.
+- Share API unavailable fallback.
+- Service-worker install/update/offline fallback.
+
+## Mobile checklist
+
+Test 320, 360, 375, 390, 430, 768, 1024, 1280 and 1440 CSS-pixel widths. Check for horizontal overflow, reachable controls, dialog overflow, tool forms, canvas previews, sticky header behaviour, safe-area spacing and ad placeholders. Verify that any real ad code cannot cover controls or create accidental click zones.
+
+## Security checklist
+
+- Inspect DevTools Console for unexpected errors.
+- Inspect Network for unexpected third-party requests.
+- Search source for API keys/secrets before deployment.
+- Test malformed hash fragments.
+- Test hostile strings in prompt fields and tool inputs; they must remain text, not HTML/script.
+- Test large/invalid image files.
+- Confirm downloads occur only after successful processing.
+- Confirm uploaded images are not sent to a server by this frontend.
+- Review any future Adsterra code against its official source and required domains.
+- Review CSP only after all intended third-party domains are known; do not deploy a CSP that silently breaks ads, analytics or required fonts.
+
+## Owner configuration checklist
+
+Required before production SEO/analytics/ads:
+
+- `site-config.js` → `SITE_URL`.
+- `site-config.js` → optional analytics measurement ID.
+- `index.html` → exact official Adsterra code in the marked placeholders, if monetisation is enabled.
+- Official social URLs only if the owner actually has those accounts.
+- Real brand/domain assets if replacing the included generated Open Graph artwork.
+
+Never place API keys, private tokens, passwords, database credentials or `.env` secrets in frontend files.
+
+## Remaining frontend-only limitations
+
+A static frontend cannot provide accounts, cross-device sync, server-side validation, rate limiting, private cloud storage, guaranteed uptime, guaranteed SEO rankings, guaranteed Adsterra approval/revenue, or guaranteed zero security risk. Those capabilities require infrastructure outside this free browser-first architecture.

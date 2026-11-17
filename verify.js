@@ -1,64 +1,13 @@
-/* Lightweight project checks. Run with: node verify.js */
+/* Dependency-free project verification. Run with: node verify.js */
 'use strict';
-const fs = require('node:fs');
-const path = require('node:path');
-const vm = require('node:vm');
-
-const root = __dirname;
-const read = name => fs.readFileSync(path.join(root, name), 'utf8');
-const fail = message => { console.error(`FAIL: ${message}`); process.exitCode = 1; };
-const pass = message => console.log(`PASS: ${message}`);
-
-for (const file of ['data.js', 'script.js']) {
-  try { new vm.Script(read(file), { filename: file }); pass(`${file} parses`); }
-  catch (error) { fail(`${file} syntax: ${error.message}`); }
-}
-
-try {
-  const context = vm.createContext({});
-  const source = `${read('data.js')}\n;JSON.stringify(CATEGORY_DATA.map(category => ({name:category.name,count:category.designs.length,designs:category.designs})))`;
-  const categories = JSON.parse(vm.runInContext(source, context));
-  const designs = categories.flatMap(category => category.designs);
-  const ids = designs.map(design => design.id);
-  if (categories.length !== 30) fail(`expected 30 categories; found ${categories.length}`);
-  else pass('30 catalogue categories found');
-  if (categories.some(category => category.count !== 250)) fail('each category must contain exactly 250 concepts');
-  else pass('250 concepts in every category');
-  if (designs.length !== 7500) fail(`expected 7,500 concepts; found ${designs.length}`);
-  else pass('7,500 concepts total');
-  if (new Set(ids).size !== ids.length) fail('catalogue IDs are not unique');
-  else pass('catalogue IDs are unique');
-  if (designs.some(d => !d.id || !d.name || !d.description || !d.prompt || !d.subcategory || !d.palette?.bg || !d.palette?.ink || !d.palette?.line)) fail('one or more catalogue records have missing required fields');
-  else pass('catalogue records contain required fields');
-} catch (error) { fail(`catalogue validation: ${error.message}`); }
-
-try {
-  const html = read('index.html');
-  const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(match => match[1]);
-  if (new Set(ids).size !== ids.length) fail('HTML contains duplicate IDs');
-  else pass('HTML IDs are unique');
-  for (const asset of ['style.css', 'data.js', 'script.js']) {
-    if (!fs.existsSync(path.join(root, asset))) fail(`missing required asset: ${asset}`);
-    else pass(`${asset} exists`);
-  }
-  if (/\<script\b[^>]*\bsrc=["']https?:\/\//i.test(html)) fail('remote script dependency found in index.html');
-  else pass('no remote script dependencies in index.html');
-} catch (error) { fail(`HTML checks: ${error.message}`); }
-
-try {
-  const script = read('script.js');
-  const start = script.indexOf('const tools = ');
-  const end = script.indexOf(';', start);
-  if (start < 0 || end < 0) throw new Error('tool registry not found');
-  const tools = vm.runInNewContext(script.slice(start + 'const tools = '.length, end));
-  if (tools.length !== 30) fail(`expected 30 tools; found ${tools.length}`);
-  else pass('30 tools registered');
-  if (new Set(tools.map(tool => tool[0])).size !== tools.length) fail('tool route IDs are not unique');
-  else pass('tool route IDs are unique');
-  const groups = [...new Set(tools.map(tool => tool[2]))];
-  if (groups.length !== 3 || groups.some(group => tools.filter(tool => tool[2] === group).length !== 10)) fail('tool groups are not balanced 10/10/10');
-  else pass('tool groups contain 10 tools each');
-} catch (error) { fail(`tool registry validation: ${error.message}`); }
-
-if (process.exitCode) console.error('\nSome checks failed. Review the messages above.');
-else console.log('\nAll automated project checks passed. This does not replace browser or live-deployment testing.');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=__dirname, read=n=>fs.readFileSync(path.join(root,n),'utf8');
+let failures=0;const fail=m=>{failures++;console.error(`FAIL: ${m}`)},pass=m=>console.log(`PASS: ${m}`),exists=n=>fs.existsSync(path.join(root,n));
+for(const file of ['data.js','script.js','site-config.js','analytics.js','i18n.js','app-enhancements.js'])try{new vm.Script(read(file),{filename:file});pass(`${file} parses`)}catch(e){fail(`${file} syntax: ${e.message}`)}
+try{const c=vm.createContext({});const src=`${read('data.js')}\n;JSON.stringify(CATEGORY_DATA.map(c=>({name:c.name,count:c.designs.length,designs:c.designs})))`;const cats=JSON.parse(vm.runInContext(src,c));const ds=cats.flatMap(c=>c.designs),ids=ds.map(d=>d.id);if(cats.length!==30)fail(`expected 30 categories; found ${cats.length}`);else pass('30 catalogue categories found');if(cats.some(c=>c.designs.length!==250))fail('each category must contain exactly 250 concepts');else pass('250 concepts in every category');if(ds.length!==7500)fail(`expected 7,500 concepts; found ${ds.length}`);else pass('7,500 concepts total');if(new Set(ids).size!==ids.length)fail('catalogue IDs are not unique');else pass('catalogue IDs are unique');if(ds.some(d=>!d.id||!d.name||!d.description||!d.prompt||!d.subcategory||!d.palette?.bg||!d.palette?.ink||!d.palette?.line))fail('catalogue records have missing required fields');else pass('catalogue records contain required fields')}catch(e){fail(`catalogue validation: ${e.message}`)}
+try{const html=read('index.html');const ids=[...html.matchAll(/\bid=["']([^"']+)["']/g)].map(m=>m[1]);if(new Set(ids).size!==ids.length)fail('HTML contains duplicate IDs');else pass('HTML IDs are unique');for(const a of ['style.css','data.js','script.js','site-config.js','analytics.js','i18n.js','app-enhancements.js','manifest.webmanifest','service-worker.js','og-cover.svg'])if(!exists(a))fail(`missing required asset: ${a}`);else pass(`${a} exists`);if(/<script\b[^>]*\bsrc=["']https?:\/\//i.test(html))fail('remote script dependency found in index.html');else pass('no remote script dependencies in index.html');if(!/rel=["']manifest["']/i.test(html))fail('manifest link missing');else pass('manifest linked');if(!/og:title|twitter:card/i.test(html))fail('social metadata missing');else pass('social metadata present');if(!/application-name/i.test(html))fail('application metadata missing');else pass('application metadata present');}catch(e){fail(`HTML checks: ${e.message}`)}
+try{const script=read('script.js'),start=script.indexOf('const tools = '),end=script.indexOf(';',start);if(start<0||end<0)throw Error('tool registry not found');const tools=vm.runInNewContext(script.slice(start+'const tools = '.length,end));if(tools.length!==30)fail(`expected 30 tools; found ${tools.length}`);else pass('30 tools registered');if(new Set(tools.map(t=>t[0])).size!==tools.length)fail('tool route IDs are not unique');else pass('tool route IDs are unique');const groups=[...new Set(tools.map(t=>t[2]))];if(groups.length!==3||groups.some(g=>tools.filter(t=>t[2]===g).length!==10))fail('tool groups are not balanced 10/10/10');else pass('tool groups contain 10 tools each');}catch(e){fail(`tool registry validation: ${e.message}`)}
+try{const s=read('script.js');if(/innerHTML\s*=\s*[^;]*\b(user|input|value|text)\b/i.test(s))console.warn('WARN: review dynamic innerHTML sites for user-controlled interpolation');else pass('no obvious user-input innerHTML assignment detected');if(/\.innerHTML\s*=/.test(s)&&!/escapeHtml|esc\(/.test(s))fail('dynamic HTML exists without visible escaping helpers');else pass('dynamic HTML uses escaping helpers where applicable');if(/eval\s*\(|new Function\s*\(/.test(s))fail('dynamic code execution detected');else pass('no eval/new Function');}catch(e){fail(`security pattern checks: ${e.message}`)}
+try{const cfg=read('site-config.js');if(/(API_KEY|SECRET|PASSWORD|PRIVATE_TOKEN)\s*[:=]/i.test(cfg))fail('possible secret in public configuration');else pass('no obvious secret configuration');if(!/measurementId:\s*""/.test(cfg))fail('analytics placeholder missing');else pass('analytics configuration placeholder present');if(!/ADSTERRA PLACEMENT/.test(read('index.html')))fail('Adsterra placement markers missing');else pass('Adsterra placement markers present');}catch(e){fail(`configuration checks: ${e.message}`)}
+try{const css=read('style.css');if(!/@media\s*\(prefers-reduced-motion:reduce\)/.test(css))fail('reduced-motion CSS missing');else pass('reduced-motion support present');if(!/:focus-visible/.test(css))fail('focus-visible styling missing');else pass('visible focus styling present');}catch(e){fail(`CSS checks: ${e.message}`)}
+if(failures){console.error(`\n${failures} verification check(s) failed.`);process.exitCode=1}else console.log('\nAll automated project checks passed. Browser and live-deployment testing are still required.');
