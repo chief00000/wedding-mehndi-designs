@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#241b22">
-  <meta name="description" content="Explore wedding and mehndi design concepts and create polished AI image prompts.">
+  <meta name="description" content="Explore 7,500 wedding and mehndi design prompt concepts, build custom creative prompts, and use 30 free browser-based wedding tools.">
+  <meta name="robots" content="index,follow">
+  <meta name="color-scheme" content="light">
   <title>Wedding & Mehndi Designs — The Atelier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,19 +14,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
   <header class="topbar">
     <a class="brand" href="#" aria-label="Wedding and Mehndi Designs home">
       <span class="brand-mark" aria-hidden="true">W<span>✳</span>M</span>
       <span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span>
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-    <nav class="nav-links" id="navLinks">
+    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-controls="navLinks" aria-expanded="false">☰</button>
+    <nav class="nav-links" id="navLinks" aria-label="Main navigation">
       <a href="#library">Design Library</a><a href="#generator">Prompt Studio</a><a href="#tools">Free Tools</a><a href="#how">How it works</a>
     </nav>
     <a class="top-cta" href="#tools">Explore free tools <span>↗</span></a>
   </header>
 
-  <main>
+  <main id="mainContent">
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow"><span class="eyebrow-line"></span> YOUR CREATIVE WEDDING COMPANION</div>
@@ -57,7 +60,7 @@
       <div class="category-layout">
         <aside class="category-sidebar"><div class="sidebar-title">CATEGORIES <span id="categoryCount"></span></div><div id="categoryNav" class="category-nav"></div></aside>
         <div class="design-content">
-          <div class="active-category-row"><div><div class="eyebrow" id="categoryEyebrow">THE COLLECTION</div><h3 id="activeCategoryTitle">Mehndi Designs</h3></div><span class="result-count" id="resultCount">150 concepts</span></div>
+          <div class="active-category-row"><div><div class="eyebrow" id="categoryEyebrow">THE COLLECTION</div><h3 id="activeCategoryTitle">Mehndi Designs</h3></div><span class="result-count" id="resultCount">250 concepts</span></div>
           <div id="subcategoryRow" class="subcategory-row"></div>
           <div id="designGrid" class="design-grid" aria-live="polite"></div>
           <div id="emptyState" class="empty-state" hidden><span>⌕</span><h3>No designs found</h3><p>Try a different search term or clear the active filters.</p><button class="button button-outline" id="clearFilters">Clear filters</button></div>
@@ -103,26 +106,18 @@
     </section>
     <section id="toolWorkspace" class="tool-workspace section" hidden aria-live="polite"></section>
     <section id="legalWorkspace" class="legal-workspace section" hidden></section>
-\n    <section class="section how-section" id="how">
+
+    <section class="section how-section" id="how">
       <div class="section-heading"><div><div class="eyebrow">A SIMPLE CREATIVE PROCESS</div><h2>From inspiration to <em>intention.</em></h2></div><p>No design software needed. Start with a concept, shape your direction, and take the prompt with you.</p></div>
       <div class="steps-grid"><article class="step-card"><span class="step-number">01</span><div class="step-icon">⌕</div><h3>Explore</h3><p>Browse the library by category, search for motifs, and open any concept for its full prompt.</p></article><article class="step-card"><span class="step-number">02</span><div class="step-icon">✳</div><h3>Personalise</h3><p>Use the Prompt Studio to choose a palette, style, composition, and the details that make your idea yours.</p></article><article class="step-card"><span class="step-number">03</span><div class="step-icon">↗</div><h3>Copy & create</h3><p>Copy the complete English prompt and use it with a compatible image-generation tool.</p></article></div>
     </section>
   </main>
-  <script>
-  atOptions = {
-    'key' : '7c0b696ae6e5932213b1579399e9290f',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/7c0b696ae6e5932213b1579399e9290f"></script>
   <footer class="footer" id="siteFooter"><a class="brand footer-brand" href="#"><span class="brand-mark">W<span>✳</span>M</span><span class="brand-copy"><strong>THE WEDDING ATELIER</strong><small>DESIGN & PROMPT STUDIO</small></span></a><p>Made for meaningful details and beautiful beginnings.</p><nav class="footer-links" aria-label="Legal and information"><a href="#legal/about-us">About</a><a href="#legal/contact-us">Contact</a><a href="#legal/privacy-policy">Privacy</a><a href="#legal/terms-conditions">Terms</a><a href="#legal/disclaimer">Disclaimer</a><a href="#legal/acceptable-use">Acceptable use</a><a href="#legal/storage-notice">Storage notice</a></nav><div class="footer-credit">Created by <strong>Chief</strong> <span>✳</span></div></footer>
 
   <dialog id="designDialog" class="design-dialog"><button class="dialog-close" id="closeDialog" aria-label="Close design details">×</button><div id="dialogContent"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="data.js"></script><script src="script.js"></script>
-  <script data-cfasync="false" src="https://bauval.org/14/d9f29f2d558b8a68c909dd4a088e3301"></script>
+  <noscript><div class="noscript-notice">Please enable JavaScript to use the design library, prompt studio, and interactive tools.</div></noscript>
+  <script defer src="data.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>

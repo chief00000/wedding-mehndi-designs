@@ -1,28 +1,38 @@
 (() => {
   "use strict";
+  if(typeof CATEGORY_DATA==="undefined"||!Array.isArray(CATEGORY_DATA)||CATEGORY_DATA.length===0){
+    const grid=document.querySelector("#designGrid");
+    if(grid)grid.innerHTML='<p class="empty-state">The design catalogue could not be loaded. Please refresh the page or contact the site owner.</p>';
+    return;
+  }
   const $ = (selector, root=document) => root.querySelector(selector);
   const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
   const state = {category:CATEGORY_DATA[0].name, subcategory:"All", search:"", sort:"featured", favoritesOnly:false, favorites:new Set(loadFavorites()), viewed:[], visibleCount:18, currentPrompt:"", generation:0};
   const categoryNav=$("#categoryNav"), designGrid=$("#designGrid"), subcategoryRow=$("#subcategoryRow");
   const dialog=$("#designDialog"), dialogContent=$("#dialogContent"), toast=$("#toast");
-  function loadFavorites(){try{return JSON.parse(localStorage.getItem("wmd-favorites")||"[]")}catch{return []}}
+  function loadFavorites(){
+    try {
+      const value=JSON.parse(localStorage.getItem("wmd-favorites")||"[]");
+      return Array.isArray(value)?value.filter(id=>typeof id==="string"&&/^c\d+-d\d+$/.test(id)):[];
+    } catch { return []; }
+  }
   function saveFavorites(){try{localStorage.setItem("wmd-favorites",JSON.stringify([...state.favorites]))}catch{}}
   function escapeHtml(value){return String(value).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
   function currentCategory(){return CATEGORY_DATA.find(c=>c.name===state.category)||CATEGORY_DATA[0]}
-  function allDesigns(){return CATEGORY_DATA.flatMap(c=>c.designs.map(d=>({...d,category:c.name,categoryIcon:c.icon})))}
-  function getDesign(id){return allDesigns().find(d=>d.id===id)}
+  const designIndex=new Map(CATEGORY_DATA.flatMap(c=>c.designs.map(d=>[d.id,{...d,category:c.name,categoryIcon:c.icon}])));
+  function getDesign(id){return designIndex.get(id)}
   function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),2300)}
   async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text)}else{const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();const ok=document.execCommand("copy");area.remove();if(!ok)throw new Error("Clipboard unavailable")}showToast("Prompt copied to clipboard")}catch{showToast("Copy was blocked by your browser. Select and copy the prompt manually.")}}
   function artStyle(palette){return `--art-bg:${palette.bg};--art-ink:${palette.ink};--art-line:${palette.line}`}
   function renderCategories(){
     $("#categoryCount").textContent=String(CATEGORY_DATA.length).padStart(2,"0");
-    categoryNav.innerHTML=CATEGORY_DATA.map(c=>`<button class="category-link ${c.name===state.category?"active":""}" data-category="${escapeHtml(c.name)}"><span class="cat-icon">${c.icon}</span><span>${escapeHtml(c.name)}</span><span class="cat-count">250</span></button>`).join("");
+    categoryNav.innerHTML=CATEGORY_DATA.map(c=>`<button type="button" class="category-link ${c.name===state.category?"active":""}" data-category="${escapeHtml(c.name)}"><span class="cat-icon" aria-hidden="true">${escapeHtml(c.icon)}</span><span>${escapeHtml(c.name)}</span><span class="cat-count">${c.designs.length}</span></button>`).join("");
     $("#genCategory").innerHTML=CATEGORY_DATA.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join("");
     $("#genCategory").value=state.category;
   }
   function renderSubcategories(){
     const subs=["All",...new Set(currentCategory().designs.map(d=>d.subcategory))];
-    subcategoryRow.innerHTML=subs.map(s=>`<button class="subcat ${s===state.subcategory?"active":""}" data-subcategory="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join("");
+    subcategoryRow.innerHTML=subs.map(s=>`<button type="button" class="subcat ${s===state.subcategory?"active":""}" data-subcategory="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join("");
   }
   function filteredDesigns(){
     let list=currentCategory().designs.map(d=>({...d,category:state.category,categoryIcon:currentCategory().icon}));
@@ -88,7 +98,6 @@
   dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close()});
   $("#menuToggle").addEventListener("click",()=>{const open=$("#navLinks").classList.toggle("open");$("#menuToggle").setAttribute("aria-expanded",String(open))});
   $$("#navLinks a").forEach(a=>a.addEventListener("click",()=>{$("#navLinks").classList.remove("open");$("#menuToggle").setAttribute("aria-expanded","false")}));
-  $$(".text-link, .top-cta, .hero-actions a").forEach(a=>a.addEventListener("click",()=>{}));
   $("#ideaInput").addEventListener("input",e=>{if(e.target.value.length>480)e.target.setCustomValidity("Please keep your idea under 500 characters.");else e.target.setCustomValidity("")});
   renderCategories();renderSubcategories();renderDesigns();
 })();
@@ -103,7 +112,7 @@ const directory=$("#toolDirectory"), workspace=$("#toolWorkspace"), legal=$("#le
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 const groups=["Mehndi Design Tools","Image Editing Tools","Wedding Utility Tools"];
-const state={images:[],canvas:null,ctx:null,checklist:new Set()};
+const state={images:[],canvas:null,ctx:null,checklist:new Set(),processed:false};
 function renderDirectory(){
  directory.innerHTML=groups.map(group=>`<section class="tool-group"><div class="tool-group-heading"><h3>${group}</h3><span>${tools.filter(t=>t[2]===group).length.toString().padStart(2,"0")} TOOLS</span></div><div class="tool-name-grid">${tools.filter(t=>t[2]===group).map(t=>`<a class="tool-name-link" href="#tool/${t[0]}"><span>${esc(t[1])}</span><span aria-hidden="true">↗</span></a>`).join("")}</div></section>`).join("");
 }
@@ -163,20 +172,19 @@ const legalPages={
 "acceptable-use":["Acceptable Use Policy","Do not use this website for unlawful activity, malicious uploads, attempts to exploit or disrupt the page, unauthorised access, abusive automation, or infringement of others' rights. Upload only files you are authorised to use. Files are validated by type and size in the frontend, but browser checks are not a substitute for server-side security. Stop using the site if you identify a security issue and report it to chief0000019@gmail.com. Because this is a static site, there is no server-side account system or enforcement mechanism."],
 "storage-notice":["Cookie & Local Storage Notice","This version does not intentionally set cookies. It uses localStorage to save design favourites in your browser. Tool inputs and checklist progress are not sent to a server and are not saved persistently by these tools. Browser caches, extensions, hosting providers, or external font requests may operate independently. You can remove local site data through your browser settings; clearing it also removes saved favourites."]
 };
-function renderLegal(slug){const p=legalPages[slug]||legalPages["about-us"];legal.hidden=false;legal.innerHTML=`<a class="back-tools" href="#tools">← Back to the website</a><div class="eyebrow">THE WEDDING ATELIER · INFORMATION</div><h2>${esc(p[0])}</h2><div class="legal-copy"><p>${slug==="contact-us"?p[1]:esc(p[1])}</p><p class="legal-updated">Last reviewed: 29 October 2026. This information describes the current static frontend and is not a certification of legal compliance.</p></div>`;workspace.hidden=true;$("#tools").hidden=true;$("#library").hidden=true;$("#generator").hidden=true;$("#how").hidden=true;window.scrollTo(0,0)}
+function renderLegal(slug){const p=legalPages[slug]||legalPages["about-us"];legal.hidden=false;legal.innerHTML=`<a class="back-tools" href="#tools">← Back to the website</a><div class="eyebrow">THE WEDDING ATELIER · INFORMATION</div><h2>${esc(p[0])}</h2><div class="legal-copy"><p>${slug==="contact-us"?p[1]:esc(p[1])}</p><p class="legal-updated">Last reviewed: 17 November 2026. This information describes the current static frontend and is not a certification of legal compliance.</p></div>`;workspace.hidden=true;$("#tools").hidden=true;$("#library").hidden=true;$("#generator").hidden=true;$("#how").hidden=true;window.scrollTo(0,0)}
 function renderTool(id){
  const t=tools.find(x=>x[0]===id);if(!t){location.hash="#tools";return}
  legal.hidden=true;$("#tools").hidden=true;$("#library").hidden=true;$("#generator").hidden=true;$("#how").hidden=true;workspace.hidden=false;
  workspace.innerHTML=`<a class="back-tools" href="#tools">← Back to Free Tools</a><div class="tool-title-row"><div><div class="eyebrow">${esc(t[2])} · FREE BROWSER TOOL</div><h2>${esc(t[1])}</h2><p>${t[3]==="prompt"?"Create a tailored design prompt you can edit and copy.":t[3]==="image"?"Process a local image in your browser and export the result.":"Generate a useful result with simple controls."}</p></div></div><div class="tool-panel">${t[3]==="prompt"?basePromptForm(id):t[3]==="image"?imageForm(id):utilityForm(id)}</div><p class="tool-privacy-note">No account is required. Tool inputs stay in this page unless you copy or download the result. <a href="#legal/privacy-policy">Privacy details</a>.</p>`;
- state.images=[];state.canvas=$("#toolCanvas");state.ctx=state.canvas?.getContext("2d")||null;
+ state.images=[];state.processed=false;state.canvas=$("#toolCanvas");state.ctx=state.canvas?.getContext("2d")||null;
  if(id==="mehndi-ceremony-planner"||id==="bridal-preparation-checklist")renderChecklist(id);
  if(id==="mehndi-photo-editor")["brightness","contrast","saturation"].forEach(k=>$("#"+k)?.addEventListener("input",()=>processImage(id,false)));
  window.scrollTo(0,0);
 }
 function renderChecklist(id){
  const items=id==="mehndi-ceremony-planner"?["Confirm ceremony date and venue","Set guest list and invitations","Book mehndi artist(s)","Confirm artist rates and timing","Plan seating and refreshments","Arrange decor and lighting","Prepare music and schedule","Confirm supplies and emergency kit","Share schedule with family","Confirm final vendor details"]:["Confirm bridal outfit and fitting","Prepare jewellery and accessories","Confirm mehndi appointment","Plan outfit-friendly mehndi timing","Arrange comfortable seating","Prepare skincare essentials","Keep phone charger and essentials ready","Confirm transport","Pack touch-up and emergency kit","Rest, hydrate, and confirm schedule"];
- $("#checklist").innerHTML=items.map((x,i)=>`<label class="check-item"><input type="checkbox" data-task="${i}"><span>${x}</span></label>`).join("")+`<p id="checkProgress" class="tool-hint">0 of ${items.length} completed</p>`;
- $("#checklist").addEventListener("change",()=>{const checks=[...$("#checklist").querySelectorAll("input")];$("#checkProgress").textContent=`${checks.filter(c=>c.checked).length} of ${checks.length} completed`;});
+ $("#checklist").innerHTML=items.map((x,i)=>`<label class="check-item"><input type="checkbox" data-task="${i}"><span>${esc(x)}</span></label>`).join("")+`<p id="checkProgress" class="tool-hint">0 of ${items.length} completed</p>`;
 }
 function getVal(id,def=""){return $("#"+id)?.value?.trim()??def}
 function putOutput(text){const o=$("#toolOutput");if(o)o.value=text;const r=$("#utilityResult");if(r)r.textContent=text}
@@ -188,18 +196,34 @@ function makePrompt(id){
 }
 function hex(c){return /^#[0-9a-f]{6}$/i.test(c)?c:"#8b4d58"}
 function drawContain(ctx,img,x,y,w,h,cover=false){const r=cover?Math.max(w/img.width,h/img.height):Math.min(w/img.width,h/img.height),dw=img.width*r,dh=img.height*r;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
-function loadImages(files){return Promise.all([...files].slice(0,12).map(file=>new Promise((resolve,reject)=>{if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)||file.size>8*1024*1024){reject(new Error(`${file.name}: use PNG, JPEG, WebP or GIF under 8 MB.`));return}const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error(`Could not read ${file.name}.`))};img.src=url})))}
+function loadImages(files){
+ if(files.length>12) return Promise.reject(new Error("Choose no more than 12 images at once."));
+ return Promise.all([...files].map(file=>new Promise((resolve,reject)=>{
+  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)||file.size>8*1024*1024){reject(new Error(`${file.name}: use PNG, JPEG, WebP or GIF under 8 MB.`));return}
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};
+  img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error(`Could not read ${file.name}.`))};
+  img.src=url;
+ })))
+}
 async function processImage(id,showMessage=true){
+ state.processed=false;
  const fileInput=$("#imageFiles"),files=fileInput?.files;if(!files?.length){if(showMessage)$("#imageStatus").textContent="Choose a valid image first.";return false}
  const status=$("#imageStatus");if(status)status.textContent="Processing…";
  try{
   const imgs=await loadImages(files);let w=imgs[0].width,h=imgs[0].height;
   if(id==="pinterest-pin-maker"){w=1000;h=1500}
-  if(id==="mehndi-image-resizer"){w=Math.min(5000,Math.max(1,Number(getVal("imgWidth","1200"))));h=Math.min(5000,Math.max(1,Number(getVal("imgHeight","1200"))));if(!Number.isFinite(w)||!Number.isFinite(h))throw Error("Enter valid image dimensions.");if($("#keepRatio")?.checked){const ratio=imgs[0].width/imgs[0].height;if(w/h>ratio)w=Math.round(h*ratio);else h=Math.round(w/ratio)}}
+  if(id==="mehndi-image-resizer"){
+   w=Number(getVal("imgWidth","1200"));h=Number(getVal("imgHeight","1200"));
+   if(!Number.isFinite(w)||!Number.isFinite(h)||w<1||h<1||w>5000||h>5000)throw Error("Enter image dimensions between 1 and 5,000 pixels.");
+   if($("#keepRatio")?.checked){const ratio=imgs[0].width/imgs[0].height;if(w/h>ratio)w=Math.round(h*ratio);else h=Math.round(w/ratio)}
+  }
   if(["mehndi-collage-maker","wedding-mood-board-maker"].includes(id)){const cols=getVal("imgGrid").startsWith("3")?3:2,rows=Math.ceil(imgs.length/cols);w=900;h=rows*520}
   if(id==="wedding-invitation-card-maker"){w=1200;h=1600}
+  if(!Number.isFinite(w)||!Number.isFinite(h)||w<1||h<1)throw Error("Enter valid image dimensions.");
+  w=Math.round(w);h=Math.round(h);
   if(w*h>16000000)throw Error("That canvas is too large. Choose smaller dimensions.");
-  const canvas=$("#toolCanvas");canvas.width=w;canvas.height=h;const ctx=canvas.getContext("2d");ctx.fillStyle=id==="wedding-invitation-card-maker"?"#fff8f0":"#fbf8f3";ctx.fillRect(0,0,w,h);
+  const canvas=$("#toolCanvas");if(!canvas)throw Error("Image preview is unavailable. Reload this tool and try again.");canvas.width=w;canvas.height=h;const ctx=canvas.getContext("2d");if(!ctx)throw Error("Your browser could not create an image canvas.");ctx.fillStyle=id==="wedding-invitation-card-maker"?"#fff8f0":"#fbf8f3";ctx.fillRect(0,0,w,h);
   if(["mehndi-collage-maker","wedding-mood-board-maker"].includes(id)){
    const cols=getVal("imgGrid").startsWith("3")?3:2,cellW=w/cols,cellH=500;
    imgs.forEach((img,i)=>{const x=(i%cols)*cellW,y=Math.floor(i/cols)*cellH;ctx.fillStyle="#fffdfa";ctx.fillRect(x+8,y+8,cellW-16,cellH-16);drawContain(ctx,img,x+20,y+20,cellW-40,cellH-40);});
@@ -221,7 +245,7 @@ async function processImage(id,showMessage=true){
     ctx.strokeStyle=hex(getVal("inviteColor","#9b6875"));ctx.lineWidth=8;ctx.strokeRect(48,48,w-96,h-96);ctx.lineWidth=2;ctx.strokeRect(66,66,w-132,h-132);ctx.textAlign="center";ctx.fillStyle="#513747";ctx.font="28px Georgia";ctx.fillText("YOU ARE CORDIALLY INVITED",w/2,220);ctx.font="bold 64px Georgia";ctx.fillText(getVal("inviteNames","Together with our families").slice(0,40),w/2,430,w-140);ctx.font="34px Georgia";ctx.fillText(getVal("inviteDate","Wedding celebration").slice(0,70),w/2,530,w-140);ctx.font="26px Georgia";const lines=(getVal("inviteWording","Join us to celebrate this special day.").match(/.{1,42}(\s|$)/g)||[getVal("inviteWording")]).slice(0,8);lines.forEach((line,i)=>ctx.fillText(line.trim(),w/2,650+i*44,w-140));
    }
   }
-  state.canvas=canvas;state.ctx=ctx;if(status)status.textContent=`Ready: ${canvas.width} × ${canvas.height}px. Download PNG to export.`;return true;
+  state.canvas=canvas;state.ctx=ctx;state.processed=true;if(status)status.textContent=`Ready: ${canvas.width} × ${canvas.height}px. Download PNG to export.`;return true;
  }catch(e){if(status)status.textContent=e.message||"Image processing failed. Try another file.";return false}
 }
 async function action(actionName){
@@ -230,7 +254,7 @@ async function action(actionName){
  if(actionName==="make-prompt"){putOutput(makePrompt(id));return}
  if(actionName==="copy-output"){const text=$("#toolOutput")?.value||$("#paletteOutput")?.textContent||"";await copy(text);return}
  if(actionName==="process-image"){await processImage(id);return}
- if(actionName==="download-image"){if(!$("#toolCanvas")||!$("#imageFiles")?.files.length){$("#imageStatus").textContent="Process an image before downloading.";return}const c=$("#toolCanvas");c.toBlob(blob=>{if(!blob){$("#imageStatus").textContent="Export failed. Try a smaller image.";return}downloadBlob(blob,`${id}.png`)},"image/png");return}
+ if(actionName==="download-image"){if(!state.processed||!$("#toolCanvas")){const status=$("#imageStatus");if(status)status.textContent="Process an image successfully before downloading.";return}const c=$("#toolCanvas");c.toBlob(blob=>{if(!blob){const status=$("#imageStatus");if(status)status.textContent="Export failed. Try a smaller image.";return}downloadBlob(blob,`${id}.png`)} ,"image/png");return}
  if(actionName==="palette"){const palettes={"Romantic blush":["#F7E8E5","#D7A0A5","#A96776","#F2D6B3","#6B4A57","#FFF9F2"],"Royal jewel tones":["#173F35","#7A2032","#D4AF72","#25324A","#F2E7D2","#8B5E83"],"Earthy mehndi":["#6B3F2A","#B66A45","#D8B887","#69724D","#F3E7D2","#392C28"],"Ivory garden":["#FFF9F0","#D9C9B8","#A5B49A","#D8A6A0","#C8A76B","#6C5860"],"Modern monochrome":["#171717","#454545","#777777","#B7B7B7","#E8E5E0","#FFFFFF"],"Festive marigold":["#E8A923","#D45A38","#9B2450","#2D654B","#F6D8A8","#FFF4E1"]};const arr=palettes[getVal("mood")].slice(0,Number(getVal("paletteSize","5 colours")[0]));$("#paletteOutput").innerHTML=arr.map(c=>`<div class="palette-swatch"><span style="background:${c}"></span><code>${c}</code><button type="button" data-hex="${c}" aria-label="Copy ${c}">Copy</button></div>`).join("");$("#toolOutput").value=arr.join(", ");return}
  if(actionName==="pattern"){const size=Math.min(1200,Math.max(200,Number(getVal("patternSize","600"))||600)),color=hex(getVal("patternColor"));let shapes="";const type=getVal("patternType");if(type==="Mandala rings"){for(let r=size*.12;r<size*.44;r+=size*.07)shapes+=`<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="3"/>`;for(let i=0;i<16;i++)shapes+=`<ellipse cx="${size/2}" cy="${size*.22}" rx="${size*.045}" ry="${size*.12}" transform="rotate(${i*22.5} ${size/2} ${size/2})" fill="none" stroke="${color}" stroke-width="2"/>`}else if(type==="Geometric lattice"){for(let i=-size;i<size*2;i+=size/8)shapes+=`<path d="M${i} 0 L${i-size} ${size} M${i} 0 L${i+size} ${size}" stroke="${color}" fill="none" stroke-width="2"/>`}else{for(let i=0;i<12;i++)shapes+=`<ellipse cx="${size/2}" cy="${size*.3}" rx="${size*.09}" ry="${size*.2}" transform="rotate(${i*30} ${size/2} ${size/2})" fill="none" stroke="${color}" stroke-width="3"/>`;shapes+=`<circle cx="${size/2}" cy="${size/2}" r="${size*.12}" fill="none" stroke="${color}" stroke-width="3"/><circle cx="${size/2}" cy="${size/2}" r="${size*.04}" fill="${color}"/>`}const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><rect width="100%" height="100%" fill="#fffaf4"/>${shapes}</svg>`;$("#toolOutput").value=svg;$("#patternPreview").innerHTML=svg;return}
  if(actionName==="download-svg"){const svg=$("#toolOutput")?.value;if(!svg){$("#patternPreview").textContent="Create a pattern first.";return}downloadBlob(new Blob([svg],{type:"image/svg+xml"}),"mehndi-pattern.svg");return}
@@ -256,9 +280,21 @@ document.addEventListener("click",e=>{
  const a=e.target.closest("[data-action]");if(a){e.preventDefault();action(a.dataset.action)}
  const hexButton=e.target.closest("[data-hex]");if(hexButton)copy(hexButton.dataset.hex);
 });
-document.addEventListener("change",e=>{if(e.target.id==="imageFiles"){const status=$("#imageStatus");if(status)status.textContent=`${e.target.files.length} file(s) selected. Choose Process image to preview.`}});
+document.addEventListener("change",e=>{
+ if(e.target.id==="imageFiles"){
+  state.processed=false;
+  const status=$("#imageStatus");
+  if(status)status.textContent=`${e.target.files.length} file(s) selected. Choose Process image to preview.`;
+ }
+ if(e.target.matches("#checklist input[type=checkbox]")){
+  const checks=[...$("#checklist").querySelectorAll("input[type=checkbox]")];
+  const progress=$("#checkProgress");
+  if(progress)progress.textContent=`${checks.filter(c=>c.checked).length} of ${checks.length} completed`;
+ }
+});
 function route(){
- const hash=decodeURIComponent(location.hash||"#");
+ let hash=location.hash||"#";
+ try{hash=decodeURIComponent(hash)}catch{location.hash="#tools";return}
  if(hash.startsWith("#tool/")){renderTool(hash.slice(6));return}
  if(hash.startsWith("#legal/")){renderLegal(hash.slice(7));return}
  workspace.hidden=true;legal.hidden=true;$("#tools").hidden=false;$("#library").hidden=false;$("#generator").hidden=false;$("#how").hidden=false;
